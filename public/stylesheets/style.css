@@ -4,6 +4,7 @@
 /*
  * Grab a custom font from Google
  */
+@import url("http://fonts.googleapis.com/css?family=Droid+Sans|Lekton|Ubuntu+Mono|Open+Sans:400,700");
 @import url("http://fonts.googleapis.com/css?family=Quicksand");
 /*
  * Nib provides a CSS reset
