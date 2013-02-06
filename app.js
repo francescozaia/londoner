@@ -24,5 +24,6 @@ app.get('/*', function (req, res) {
 		title : 'Home'
 	});
 })
-console.log('Server running at http://localhost:3000/');
-app.listen(3000);
+
+var port = process.env.PORT || 3000;
+app.listen(port);
