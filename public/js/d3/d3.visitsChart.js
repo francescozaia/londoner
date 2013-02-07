@@ -6,7 +6,8 @@
         width = 800 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
-    var color = d3.scale.ordinal().range([ "#536E7D", "#1A3540", "#786056"]);
+    var colorArray = [ "#536E7D", "#1A3540", "#786056"];
+    var color = d3.scale.ordinal().range(colorArray);
 
     var lineWeight = "";
 
@@ -101,6 +102,7 @@
         var wScale = d3.scale.ordinal().range([ 1, 2, 4]);
         city.append("path")
             .attr("class", "line")
+            .attr("id", function(d) { return d.name.replace("ga:","");})
             .attr("d", function(d) { return line(d.values); })
             .style("stroke", function(d) { return color(d.name); })
             .style("stroke-width", function(d) { return wScale(d.name); })
@@ -173,7 +175,7 @@
             stop: function() {
                 $( ".ui-selected", this ).each(function() {
                     var index = $( "#selectable li" ).index( this );
-                    var modifiedWScale = d3.scale.ordinal().range([ 15, 1, 14]);
+                    var modifiedWScale = d3.scale.ordinal().range([ 2, 2, 2]);
                     var modifiedLine = d3.svg.line()
                         .interpolate(interpolations[index])
                         .x(function(d) { return xScale(d.date); })
@@ -185,12 +187,45 @@
                 });
             }
         });
-        var inputMinicolors = $('<input class="minicolors"></input>').appendTo("#chart");
+        var inputMinicolors1 = $('<input id="visits" class="minicolors"></input>').appendTo("#chart");
+        var inputMinicolors2 = $('<input id="newVisits" class="minicolors"></input>').appendTo("#chart");
+        var inputMinicolors3 = $('<input id="differenza" class="minicolors"></input>').appendTo("#chart");
         
-
-        $('input.minicolors').minicolors({
+        //rifattorizzare (c'è anche l'ID della .line volendo)
+        $('input#visits').minicolors({
+            control: 'saturation',
+            defaultValue: colorArray[0],
+            textfield: false,
+            position: 'top',
             hide: function() {
-                var color = d3.scale.ordinal().range([ this[0].value, "#FFFFFF", "#000000"]);
+                colorArray[0] = this[0].value;
+                var color = d3.scale.ordinal().range(colorArray);
+                d3.selectAll(".line")
+                    .style("stroke", function(d) { return color(d.name); })
+            }
+        });
+        $('input#newVisits').minicolors({
+            defaultValue: colorArray[1],
+            control: 'saturation',
+            textfield: false,
+            position: 'top',
+            hide: function() {
+                colorArray[1] = this[0].value;
+                var color = d3.scale.ordinal().range(colorArray);
+                d3.selectAll(".line")
+                    .style("stroke", function(d) { return color(d.name); })
+            }
+        });
+        $('input#differenza').minicolors({
+            defaultValue: colorArray[2],
+            control: 'saturation',
+            textfield: false,
+            position: 'top',
+            hide: function() {
+                colorArray[2] = this[0].value;
+                var color = d3.scale.ordinal().range(colorArray);
+                d3.selectAll(".line")
+                    .style("stroke", function(d) { return color(d.name); })
             }
         });
         

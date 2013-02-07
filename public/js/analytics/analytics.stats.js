@@ -140,10 +140,10 @@
         }).execute(function (response) {
             if (!response.code) {
                 if (response.rows && response.rows.length) {
-                    d3_multipleChart.initialize(response.result);
+                    //d3_multipleChart.initialize(response.result);
                     //d3_singleChart.initialize(response);
                     //d3_stackedChart.initialize(response);
-                    //d3_visitsChart.initialize(response);
+                    d3_visitsChart.initialize(response);
                 } else {
                     utils.outputToPage('No results found.');
                 }
