@@ -13,4 +13,16 @@ What you can find inside the repo:
 
 [History.js](https://github.com/balupton/history.js) for routing, since it's a single HTML app
 
-[D3.js](http://d3js.org/) 
+[D3.js](http://d3js.org/)
+
+
+###To install it:
+install node.js
+go to londoner dir
+npm install express
+npm install jade
+npm install stylus
+npm install nib
+node app.js
+
+http://localhost:3000/
