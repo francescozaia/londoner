@@ -19,10 +19,7 @@ What you can find inside the repo:
 ###To install it:
 install node.js
 go to londoner dir
-npm install express
-npm install jade
-npm install stylus
-npm install nib
+npm install 
 node app.js
 
 http://localhost:3000/
