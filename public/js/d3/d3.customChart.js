@@ -31,22 +31,22 @@
         /* creazione checkbox */
         var ulMetricsElement = $('<ul/>')
                 .attr('id', 'metrics');
-        $.each(dataObjectTemp.columnHeaders, function(i) {
+        $.each(dataObjectTemp.query.metrics, function(i) {
             var listItem = $('<li/>')
-                .addClass('metricsItem')
-                .appendTo(ulMetricsElement);
+            .addClass('metricsItem')
+            .appendTo(ulMetricsElement);
 
             var input = $('<input/>')
-                .attr('id', dataObjectTemp.columnHeaders[i].name.toString()) 
-                .attr('value', dataObjectTemp.columnHeaders[i].name.toString())
+                .attr('id', dataObjectTemp.query.metrics[i].toString()) 
+                .attr('value', dataObjectTemp.query.metrics[i].toString())
                 .attr('name', 'lineedamostrare')
                 .attr('type', 'checkbox')
-                .attr('checked', 'checked')
+                //.attr('checked', 'checked')
                 .appendTo(listItem);
             
             var label = $('<label/>')
-                .attr('for', dataObjectTemp.columnHeaders[i].name.toString())
-                .text(dataObjectTemp.columnHeaders[i].name.toString())
+                .attr('for', dataObjectTemp.query.metrics[i].toString())
+                .text(dataObjectTemp.query.metrics[i].toString())
                 .appendTo(listItem);
         });
 
@@ -59,7 +59,7 @@
         $( "#metrics input[type=checkbox]" ).on( "click", function(event){
             var arrayDiValoriDaMostrare = [];
             $.each($("#metrics input:checked"), function(el) {
-                console.log(el, "pippo", $("#metrics input:checked")[el].value);
+                //console.log(el, "pippo", $("#metrics input:checked")[el].value);
                 arrayDiValoriDaMostrare.push($("#metrics input:checked")[el].value);
             });
             briskies(dataObjectTemp, arrayDiValoriDaMostrare);
@@ -83,10 +83,12 @@
 
         for (var i=0; i<dataObjectTemp.rows.length; i++) {
             var rowObjectTemp = {};
+            //ga:date
+            rowObjectTemp[dataObjectTemp.columnHeaders[0].name.toString()] = dataObjectTemp.rows[i][0].toString();
             $.each(arrayDiValoriDaMostrarePar, function(vdm){
                 var valVdm = arrayDiValoriDaMostrarePar[vdm];
-                console.log(vdm, " --- ", valVdm);
-                rowObjectTemp[valVdm] = dataObjectTemp.rows[i][vdm].toString();
+                //console.log(vdm, " --- ", valVdm); TANTA ROBA
+                rowObjectTemp[valVdm] = dataObjectTemp.rows[i][vdm+1].toString();
             });
             /*
             rowObjectTemp[dataObjectTemp.columnHeaders[0].name.toString()] = dataObjectTemp.rows[i][0].toString(); //ga:date
@@ -173,7 +175,7 @@
             .attr("x", 3)
             .attr("dy", ".35em")
             .text(function(d) { return d.name; });
-
+        /*
         city.selectAll("circle")
             .data(data).enter()
             .append("circle")
@@ -195,6 +197,7 @@
                 .style("opacity", 0.2)
                 .attr("r", 4);
             });
+        
         city.selectAll("circle")
             .on("mouseover.tooltip", function(d){
                 d3.select("text#as" + d["differenza"].toString()).remove(); // da sistemare "text#as" + d["ga:pageviews"].toString() perché se ce n'è più d'uno uguale muore
@@ -221,7 +224,7 @@
             .transition()
             .delay(function(d, i) { return i / data.length * enter_duration; })
             .attr("r", 4);
-
+        */
         onCreated();
     };
 
