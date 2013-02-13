@@ -76,55 +76,67 @@
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        var data = [],
-            _dimensions = [],
-            _metrics = [];
+        var _dataArray = [],
+            _dimensionsArray = [],
+            _metricsArray = [];
 
         var _dimensionsLength = valueLenght(dataObjectTemp.query.dimensions);
         var _metricsLength = valueLenght(dataObjectTemp.query.metrics);
 
-        /*
-        for ((var _m = 0; _m<dataObjectTemp.query.metrics.length; _m++) {
-            var x = {}; 
-            var valVdm = arrayDiValoriDaMostrarePar[_m];
-            for (var i=0; i<dataObjectTemp.rows.length; i++) {
-                x[valVdm] = dataObjectTemp.rows[_m][vdm+_dimensionsLength].toString();
-            }
-        }*/
-
 
         for (var i=0; i<dataObjectTemp.rows.length; i++) {
-            var rowObjectTemp = {};
-            // ga:date
+            var _rowObject = {};
+            var _dimensionsObject = {};
+            var _metricsObject = {};
+            // dimensions (by now not selectable)
             for (var _dimension = 0; _dimension<_dimensionsLength; _dimension++) {
-                rowObjectTemp[dataObjectTemp.columnHeaders[_dimension].name.toString()] = dataObjectTemp.rows[i][_dimension].toString();
+                var _dimensionName = dataObjectTemp.columnHeaders[_dimension].name.toString()
+                _rowObject[_dimensionName] = dataObjectTemp.rows[i][_dimension].toString();
+                _dimensionsObject[_dimensionName] = dataObjectTemp.rows[i][_dimension].toString();;
             }
-            // ga:visits e ga:newVisits
+            // metrics (choosen by arrayDiValoriDaMostrarePar)
             for (var _metric = _dimensionsLength; _metric<_metricsLength+_dimensionsLength; _metric++) {
-                if(arrayDiValoriDaMostrarePar.indexOf(dataObjectTemp.columnHeaders[_metric].name.toString()) > -1){
-                    rowObjectTemp[dataObjectTemp.columnHeaders[_metric].name.toString()] = dataObjectTemp.rows[i][_metric].toString();
+                var _metricsName = dataObjectTemp.columnHeaders[_metric].name.toString();
+                if(arrayDiValoriDaMostrarePar.indexOf(_metricsName) > -1){
+                    _rowObject[_metricsName] = dataObjectTemp.rows[i][_metric].toString();
+                    _metricsObject[_metricsName] = dataObjectTemp.rows[i][_metric].toString();
                 }
             }
-            data.push(rowObjectTemp);
+
+            _dataArray[i] = _rowObject;
+            _dimensionsArray[i] = _dimensionsObject;
+            _metricsArray[i] = _metricsObject;
+
 
             /*_dimensions.push(dataObjectTemp.rows[i][0].toString());
-            _metrics.push(rowObjectTemp);*/
+            _metrics.push(_rowObject);*/
         }
 
-        color.domain(d3.keys(data[0]).filter(function(key) {
-            return key !== "ga:date";
-        }));
+        /* unwanted: fa sì che cambino i colori sotto il culo al cambio delle metriche */
+        color.domain(d3.keys(_metricsArray[0]));
 
-        data.forEach(function(d) {
-            d.date = d3.time.format("%Y%m%d").parse(d["ga:date"]);
+        _dataArray.forEach(function(d) {
+            // era d.date = ... per generalizzare metterlo solo per ga:date.
+            d["ga:date"] = d3.time.format("%Y%m%d").parse(d["ga:date"]);
         });
 
+        var _cities = color.domain().map(function(n) {
+            return {
+                name: n,
+                values: _metricsArray.map(function(d){
+                    return {
+                        date: _dimensionsArray["ga:date"],
+                        temperature: parseInt(d[n])
+                    }
+                })
+            }; 
+        });
         var cities = color.domain().map(function(name) {
             return {
                 name: name,
-                values: data.map(function(d) {
+                values: _dataArray.map(function(d) {
                     return {
-                        date: d.date,
+                        date: d["ga:date"],
                         temperature: +d[name]
                     };
                 })
@@ -137,7 +149,7 @@
         $('#selectable').remove();
         $('#minicolorsDiv').remove();
 
-        xScale.domain(d3.extent(data, function(d) { return d.date; }));
+        xScale.domain(d3.extent(_dataArray, function(d) { return d["ga:date"]; }));
 
         svg.append("g")
             .attr("class", "x axis")
@@ -170,7 +182,7 @@
             .attr("class", "city");
 
 
-        var wScale = d3.scale.ordinal().range([ 1, 2, 4]);
+        var wScale = d3.scale.ordinal().range([1,1,1,1,1]);
 
         city.append("path")
             .attr("class", "line")
