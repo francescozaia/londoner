@@ -64,7 +64,6 @@
 
     function queryCoreReportingApi(profileId) {
         utils.updatePage('Querying Core Reporting API with profileId: ' + profileId);
-        var metrics = "";
         /*if ($("#visits").attr('checked') == "checked")
             metrics += ",ga:visits";
         if ($("#newVisits").attr('checked') == "checked")
@@ -73,7 +72,9 @@
             metrics = metrics.substr(1);*/
         var startDate = utils.lastDaysCount(100);
         var endDate = utils.lastDaysCount(1);
-        metrics = "ga:visits,ga:newVisits";
+        var metrics = "ga:visits,ga:newVisits,ga:percentNewVisits,ga:timeOnSite,ga:uniquePageviews";
+        var dimensions = "ga:date";
+        var sortBy = "ga:date";
 
         gapi.client.analytics.data.ga.get({
             'ids': 'ga:' + profileId,
@@ -82,8 +83,8 @@
             'start-date': startDate,
             'end-date': endDate,
             'metrics': metrics,
-            'dimensions': 'ga:date',
-            'sort': 'ga:date',
+            'dimensions': dimensions,
+            'sort': sortBy,
             'filters': 'ga:medium==organic',
         }).execute(function (response) {
             if (!response.code) {

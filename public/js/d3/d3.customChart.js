@@ -31,38 +31,35 @@
         /* creazione checkbox */
         var ulMetricsElement = $('<ul/>')
                 .attr('id', 'metrics');
-        $.each(dataObjectTemp.query.metrics, function(i) {
+        /* ciclo tutte le metriche e ne creo dei checkbox*/
+        for (var _m = 0; _m<dataObjectTemp.query.metrics.length; _m++) {
             var listItem = $('<li/>')
             .addClass('metricsItem')
             .appendTo(ulMetricsElement);
 
             var input = $('<input/>')
-                .attr('id', dataObjectTemp.query.metrics[i].toString()) 
-                .attr('value', dataObjectTemp.query.metrics[i].toString())
+                .attr('id', dataObjectTemp.query.metrics[_m].toString()) 
+                .attr('value', dataObjectTemp.query.metrics[_m].toString())
                 .attr('name', 'lineedamostrare')
                 .attr('type', 'checkbox')
                 //.attr('checked', 'checked')
                 .appendTo(listItem);
             
             var label = $('<label/>')
-                .attr('for', dataObjectTemp.query.metrics[i].toString())
-                .text(dataObjectTemp.query.metrics[i].toString())
+                .attr('for', dataObjectTemp.query.metrics[_m].toString())
+                .text(dataObjectTemp.query.metrics[_m].toString())
                 .appendTo(listItem);
-        });
-
+        };
         ulMetricsElement.appendTo("#chart");
         $( "#metrics" ).buttonset();
-        
-
 
         
         $( "#metrics input[type=checkbox]" ).on( "click", function(event){
-            var arrayDiValoriDaMostrare = [];
+            var arrayDiMetricheDaMostrare = [];
             $.each($("#metrics input:checked"), function(el) {
-                //console.log(el, "pippo", $("#metrics input:checked")[el].value);
-                arrayDiValoriDaMostrare.push($("#metrics input:checked")[el].value);
+                arrayDiMetricheDaMostrare.push($("#metrics input:checked")[el].value);
             });
-            briskies(dataObjectTemp, arrayDiValoriDaMostrare);
+            briskies(dataObjectTemp, arrayDiMetricheDaMostrare);
         });
 
     }
@@ -70,6 +67,7 @@
     function briskies(dataObjectTemp, arrayDiValoriDaMostrarePar){
         
         $('svg').remove();
+
         var svg = d3.select("#chart").append("svg")
             .attr("version", 1.1)
             .attr("xmlns", "http://www.w3.org/2000/svg")
@@ -78,24 +76,39 @@
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+        var data = [],
+            _dimensions = [],
+            _metrics = [];
 
-        var data= [];
+        var _dimensionsLength = valueLenght(dataObjectTemp.query.dimensions);
+        var _metricsLength = valueLenght(dataObjectTemp.query.metrics);
+
+        /*
+        for ((var _m = 0; _m<dataObjectTemp.query.metrics.length; _m++) {
+            var x = {}; 
+            var valVdm = arrayDiValoriDaMostrarePar[_m];
+            for (var i=0; i<dataObjectTemp.rows.length; i++) {
+                x[valVdm] = dataObjectTemp.rows[_m][vdm+_dimensionsLength].toString();
+            }
+        }*/
+
 
         for (var i=0; i<dataObjectTemp.rows.length; i++) {
             var rowObjectTemp = {};
-            //ga:date
-            rowObjectTemp[dataObjectTemp.columnHeaders[0].name.toString()] = dataObjectTemp.rows[i][0].toString();
-            $.each(arrayDiValoriDaMostrarePar, function(vdm){
-                var valVdm = arrayDiValoriDaMostrarePar[vdm];
-                //console.log(vdm, " --- ", valVdm); TANTA ROBA
-                rowObjectTemp[valVdm] = dataObjectTemp.rows[i][vdm+1].toString();
-            });
-            /*
-            rowObjectTemp[dataObjectTemp.columnHeaders[0].name.toString()] = dataObjectTemp.rows[i][0].toString(); //ga:date
-            rowObjectTemp[dataObjectTemp.columnHeaders[1].name.toString()] = dataObjectTemp.rows[i][1].toString(); //ga:visits
-            rowObjectTemp[dataObjectTemp.columnHeaders[2].name.toString()] = dataObjectTemp.rows[i][2].toString(); //ga:newVisits
-            rowObjectTemp["differenza"] = (dataObjectTemp.rows[i][1] - dataObjectTemp.rows[i][2]).toString();*/
+            // ga:date
+            for (var _dimension = 0; _dimension<_dimensionsLength; _dimension++) {
+                rowObjectTemp[dataObjectTemp.columnHeaders[_dimension].name.toString()] = dataObjectTemp.rows[i][_dimension].toString();
+            }
+            // ga:visits e ga:newVisits
+            for (var _metric = _dimensionsLength; _metric<_metricsLength+_dimensionsLength; _metric++) {
+                if(arrayDiValoriDaMostrarePar.indexOf(dataObjectTemp.columnHeaders[_metric].name.toString()) > -1){
+                    rowObjectTemp[dataObjectTemp.columnHeaders[_metric].name.toString()] = dataObjectTemp.rows[i][_metric].toString();
+                }
+            }
             data.push(rowObjectTemp);
+
+            /*_dimensions.push(dataObjectTemp.rows[i][0].toString());
+            _metrics.push(rowObjectTemp);*/
         }
 
         color.domain(d3.keys(data[0]).filter(function(key) {
@@ -227,6 +240,14 @@
         */
         onCreated();
     };
+
+    function valueLenght(v){
+        if (typeof(v) === 'string') {
+            return 1;
+        }else {
+            return v.length;
+        }
+    }
 
     function onCreated(){
     var interpolations = ["linear","step-before","basis", "cardinal"];
