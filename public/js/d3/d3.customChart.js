@@ -6,7 +6,7 @@
         width = 800 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
-    var colorArray = [ "#536E7D", "#1A3540", "#786056"];
+    var colorArray = [ "#000000"];
     var color = d3.scale.ordinal().range(colorArray);
 
     var lineWeight = "";
@@ -22,7 +22,14 @@
         .x(function(d) { return xScale(d.date); })
         .y(function(d) { return yScale(d.temperature); });
 
-    
+    var _dataArray = [],
+        _dimensionsArray = [],
+        _metricsArray = [];
+
+    var _selectedMetricsArray = [];
+
+    var _dimensionsLength = 0;
+    var _metricsLength = 0;
 
 
     function createVisitsChart(dataObjectTemp){
@@ -55,18 +62,20 @@
 
         
         $( "#metrics input[type=checkbox]" ).on( "click", function(event){
-            var arrayDiMetricheDaMostrare = [];
+            _selectedMetricsArray= [];
             $.each($("#metrics input:checked"), function(el) {
-                arrayDiMetricheDaMostrare.push($("#metrics input:checked")[el].value);
+                _selectedMetricsArray.push($("#metrics input:checked")[el].value);
             });
-            briskies(dataObjectTemp, arrayDiMetricheDaMostrare);
+            briskies(dataObjectTemp);
         });
 
     }
 
-    function briskies(dataObjectTemp, arrayDiValoriDaMostrarePar){
+    function briskies(dataObjectTemp){
         
         $('svg').remove();
+        $('#selectable').remove();
+        $('#minicolorsDiv').remove();
 
         var svg = d3.select("#chart").append("svg")
             .attr("version", 1.1)
@@ -76,12 +85,9 @@
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        var _dataArray = [],
-            _dimensionsArray = [],
-            _metricsArray = [];
+        
 
-        var _dimensionsLength = valueLenght(dataObjectTemp.query.dimensions);
-        var _metricsLength = valueLenght(dataObjectTemp.query.metrics);
+        
 
 
         for (var i=0; i<dataObjectTemp.rows.length; i++) {
@@ -94,10 +100,10 @@
                 _rowObject[_dimensionName] = dataObjectTemp.rows[i][_dimension].toString();
                 _dimensionsObject[_dimensionName] = dataObjectTemp.rows[i][_dimension].toString();;
             }
-            // metrics (choosen by arrayDiValoriDaMostrarePar)
+            // metrics (choosen by _selectedMetricsArray)
             for (var _metric = _dimensionsLength; _metric<_metricsLength+_dimensionsLength; _metric++) {
                 var _metricsName = dataObjectTemp.columnHeaders[_metric].name.toString();
-                if(arrayDiValoriDaMostrarePar.indexOf(_metricsName) > -1){
+                if(_selectedMetricsArray.indexOf(_metricsName) > -1){
                     _rowObject[_metricsName] = dataObjectTemp.rows[i][_metric].toString();
                     _metricsObject[_metricsName] = dataObjectTemp.rows[i][_metric].toString();
                 }
@@ -106,10 +112,6 @@
             _dataArray[i] = _rowObject;
             _dimensionsArray[i] = _dimensionsObject;
             _metricsArray[i] = _metricsObject;
-
-
-            /*_dimensions.push(dataObjectTemp.rows[i][0].toString());
-            _metrics.push(_rowObject);*/
         }
 
         /* unwanted: fa sì che cambino i colori sotto il culo al cambio delle metriche */
@@ -146,8 +148,7 @@
         // X
 
         
-        $('#selectable').remove();
-        $('#minicolorsDiv').remove();
+        
 
         xScale.domain(d3.extent(_dataArray, function(d) { return d["ga:date"]; }));
 
@@ -250,7 +251,7 @@
             .delay(function(d, i) { return i / data.length * enter_duration; })
             .attr("r", 4);
         */
-        onCreated();
+        onCreated(dataObjectTemp);
     };
 
     function valueLenght(v){
@@ -261,9 +262,9 @@
         }
     }
 
-    function onCreated(){
+    function onCreated(dOT){
     var interpolations = ["linear","step-before","basis", "cardinal"];
-        var link = $('<ol id="selectable"><li class="ui-widget-content ui-selected">linear</li><li class="ui-widget-content">step-before</li><li class="ui-widget-content">basis-open</li><li class="ui-widget-content">cardinal-open</li></ol>').appendTo("#chart");
+        var link = $('<ul id="selectable"><li class="ui-widget-content ui-selected">linear</li><li class="ui-widget-content">step-before</li><li class="ui-widget-content">basis-open</li><li class="ui-widget-content">cardinal-open</li></ol>').appendTo("#chart");
         $( "#selectable" ).selectable({
             stop: function() {
                 $( ".ui-selected", this ).each(function() {
@@ -281,12 +282,15 @@
             }
         });
         var minicolorsDiv = $('<div id="minicolorsDiv"></div>').appendTo("#chart");
-        var inputMinicolors1 = $('<input id="visits" class="minicolors"></input>').appendTo("#minicolorsDiv");
-        var inputMinicolors2 = $('<input id="newVisits" class="minicolors"></input>').appendTo("#minicolorsDiv");
-        var inputMinicolors3 = $('<input id="differenza" class="minicolors"></input>').appendTo("#minicolorsDiv");
-        
-        //rifattorizzare (c'è anche l'ID della .line volendo)
-        $('input#visits').minicolors({
+
+        for (var _metric = _dimensionsLength; _metric<_metricsLength+_dimensionsLength; _metric++) {
+            var _metricsName = dOT.columnHeaders[_metric].name.toString();
+            if(_selectedMetricsArray.indexOf(_metricsName) > -1){
+                $('<input id=' + _metricsName + ' class="minicolors"></input>').appendTo("#minicolorsDiv")
+            }
+        }
+
+        $( "#minicolorsDiv input" ).minicolors({
             control: 'saturation',
             defaultValue: colorArray[0],
             textfield: false,
@@ -298,34 +302,13 @@
                     .style("stroke", function(d) { return color(d.name); })
             }
         });
-        $('input#newVisits').minicolors({
-            defaultValue: colorArray[1],
-            control: 'saturation',
-            textfield: false,
-            position: 'top',
-            hide: function() {
-                colorArray[1] = this[0].value;
-                var color = d3.scale.ordinal().range(colorArray);
-                d3.selectAll(".line")
-                    .style("stroke", function(d) { return color(d.name); })
-            }
-        });
-        $('input#differenza').minicolors({
-            defaultValue: colorArray[2],
-            control: 'saturation',
-            textfield: false,
-            position: 'top',
-            hide: function() {
-                colorArray[2] = this[0].value;
-                var color = d3.scale.ordinal().range(colorArray);
-                d3.selectAll(".line")
-                    .style("stroke", function(d) { return color(d.name); })
-            }
-        });
-        
+
     }
 
     _d3.initialize = function (dataObjectTemp) {
+        _dimensionsLength = valueLenght(dataObjectTemp.query.dimensions);
+        _metricsLength = valueLenght(dataObjectTemp.query.metrics);
+
         createVisitsChart(dataObjectTemp) 
     };
 
