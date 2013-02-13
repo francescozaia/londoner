@@ -1,6 +1,6 @@
 {
-  "name": "Londoner",
-  "version": "0.0.2",
+  "name": "MySite",
+  "version": "0.0.3-2",
   "private": "true",
   "dependencies": {
     "express": "3.0.0alpha4",
