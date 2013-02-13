@@ -7,15 +7,11 @@
     };
 
     _analytics.createProfiles = function(response){
-        //var ulAccountsElement = document.createElement("div"); 
-        //ulAccountsElement.innerHTML = "profili associati all\'account email: <b>' + response.username + '</b>"; 
-
 
         var ulAccountsElement = $('<ul/>')
                 .attr('id', 'accounts');
 
-        $.each(response.items, function(i)
-        {
+        $.each(response.items, function(i) {
             var listItem = $('<li/>')
                 .addClass('accountItem')
                 .appendTo(ulAccountsElement);
@@ -30,8 +26,6 @@
 
         });
         ulAccountsElement.appendTo("#output");
-
-        /* questo deve star qui? secondo me no */
         
     };
 
