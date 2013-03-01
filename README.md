@@ -18,8 +18,11 @@ What you can find inside the repo:
 
 ###To install it:
 install node.js
+
 go to londoner dir
+
 npm install 
+
 node app.js
 
 http://localhost:3000/
