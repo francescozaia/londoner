@@ -32,7 +32,7 @@
         $('.profile_panel').hide();
         var div = $('<button/>')
                 .attr('id', 'authorize-button')
-                .text('Autorizza');
+                .text('authorize');
         $authorizeButtonElement = div.appendTo('#authenticationPanel');
         $authorizeButtonElement.click(function() {
             checkAuthorization(false);
