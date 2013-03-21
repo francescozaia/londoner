@@ -70,7 +70,7 @@
             metrics += ",ga:newVisits";
         if (metrics.charAt(0) == ",")
             metrics = metrics.substr(1);*/
-        var startDate = utils.lastDaysCount(100);
+        var startDate = utils.lastDaysCount(30);
         var endDate = utils.lastDaysCount(1);
         var metrics = "ga:visits,ga:newVisits,ga:percentNewVisits,ga:timeOnSite,ga:uniquePageviews";
         var dimensions = "ga:date";

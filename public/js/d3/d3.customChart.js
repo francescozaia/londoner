@@ -2,11 +2,11 @@
 
     'use strict';
 
-    var margin = {top: 20, right: 100, bottom: 20, left: 20},
+    var margin = {top: 40, right: 40, bottom: 40, left: 40},
         width = 800 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
-    var colorArray = [ "#000000"];
+    var colorArray = [ "#BB9ECC"];
     var color = d3.scale.ordinal().range(colorArray);
 
     var lineWeight = "";
@@ -90,7 +90,7 @@
 
         $(".target").change(function () {
             var index = this.value
-                var modifiedWScale = d3.scale.ordinal().range([ 2, 2, 2]);
+                var modifiedWScale = d3.scale.ordinal().range([1, 1, 1]);
                 var modifiedLine = d3.svg.line()
                     .interpolate(index)
                     .x(function(d) { return xScale(d.date); })
@@ -178,7 +178,7 @@
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0, " + height + ")")
-            .call(d3.svg.axis().scale(xScale).tickFormat(d3.time.format("%d")).orient("bottom"))
+            .call(d3.svg.axis().scale(xScale).ticks(5).tickFormat(d3.time.format("%d/%m")).orient("bottom"))
             //.append("text")
             //.style("text-anchor", "end")
             //.text("Giorni");
@@ -204,25 +204,34 @@
             .attr("class", "city");
 
 
-        var wScale = d3.scale.ordinal().range([1,1,1,1,1]);
+        var wScale = d3.scale.ordinal().range([1, 1, 1]);
 
         city.append("path")
             .attr("class", "line")
             .attr("id", function(d) { return d.name.replace("ga:","");})
             .attr("d", function(d) { return line(d.values); })
             .style("stroke", function(d) { return color(d.name); })
-            .style("stroke-width", function(d) { return wScale(d.name); })
-            .style("stroke-linecap", "round")
-            .style("stroke-linejoin", "round");
+            .style("stroke-width", function(d) { return wScale(d.name); });
 
+        city.selectAll("circle")
+            .data(_dataArray).enter()
+            .append("circle")
+            .style("opacity", 1)
+            .style("fill", "#262626")
+            .attr("stroke", "#BB9ECC") //colorArray
+            .attr("stroke-width", "1")
+            .attr("cx", function(d) {return xScale(d["ga:date"])})
+            .attr("cy", function(d) {return yScale(d["ga:visits"])})
+            .attr("r", 3)
 
+            /*
         city.append("text")
             .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
             .attr("transform", function(d) { return "translate(" + xScale(d.value.date) + "," + yScale(d.value.temperature) + ")"; })
             .attr("x", 3)
             .attr("dy", ".35em")
             .text(function(d) { return d.name; });
-
+*/
         onCreated(dataObjectTemp);
     };
 
