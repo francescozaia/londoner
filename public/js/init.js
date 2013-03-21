@@ -1,9 +1,9 @@
 ;(function ( _init, undefined ) {
     
     _init.go = function() {
-        initDatepicker();
-        initCheckbox();
-        initButton();
+        //initDatepicker();
+        //initCheckbox();
+        //initButton();
     }
 
     function initDatepicker() {

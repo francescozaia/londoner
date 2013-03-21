@@ -11,8 +11,6 @@ What you can find inside the repo:
 
 [Google analytics Core Reporting API](https://developers.google.com/analytics/devguides/reporting/core/v3/)
 
-[History.js](https://github.com/balupton/history.js) for routing, since it's a single HTML app
-
 [D3.js](http://d3js.org/)
 
 

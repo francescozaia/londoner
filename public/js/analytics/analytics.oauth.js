@@ -15,7 +15,7 @@
 
     function handleAuthorized () {
         // moving into "/profile"
-        History.pushState({state:1}, "Profile", "./profile");
+        //History.pushState({state:1}, "Profile", "./profile");
 
         $('.home_panel').hide();
         $('.profile_panel').show();
@@ -26,7 +26,7 @@
     }
 
     function handleUnauthorized() {
-        History.pushState({state:2}, "Authenticate", "authenticate");
+        //History.pushState({state:2}, "Authenticate", "authenticate");
         //$goButtonElement.hide();
         $('.home_panel').show();
         $('.profile_panel').hide();

@@ -58,7 +58,7 @@
                 .appendTo(listItem);
         };
         ulMetricsElement.appendTo("#chart");
-        $( "#metrics" ).buttonset();
+        //$( "#metrics" ).buttonset();
 
         
         $( "#metrics input[type=checkbox]" ).on( "click", function(event){
@@ -76,6 +76,33 @@
         $('svg').remove();
         $('#selectable').remove();
         $('#minicolorsDiv').remove();
+
+        /* START: CREAZIONE SELECT STILE */
+        var interpolations = ["linear","step-before","basis", "cardinal"];
+
+        var selectHtml = '<select class="target">'
+        $.each( interpolations, function( index, value ) {
+            selectHtml += '<option value="' + value + '">' + value + '</option>';
+        });
+        selectHtml += '</select>'
+
+        $(selectHtml).appendTo("#chart");
+
+        $(".target").change(function () {
+            var index = this.value
+                var modifiedWScale = d3.scale.ordinal().range([ 2, 2, 2]);
+                var modifiedLine = d3.svg.line()
+                    .interpolate(index)
+                    .x(function(d) { return xScale(d.date); })
+                    .y(function(d) { return yScale(d.temperature); });
+                d3.selectAll(".line")
+                    //.transition()
+                    .attr("d", function(d) { return modifiedLine(d.values); })
+                    .style("stroke-width", function(d) { return modifiedWScale(d.name); });
+
+        }).change();
+
+        /* END: CREAZIONE SELECT STILE */
 
         var svg = d3.select("#chart").append("svg")
             .attr("version", 1.1)
@@ -146,22 +173,17 @@
         });
 
         // X
-
-        
-        
-
         xScale.domain(d3.extent(_dataArray, function(d) { return d["ga:date"]; }));
 
         svg.append("g")
             .attr("class", "x axis")
             .attr("transform", "translate(0, " + height + ")")
-            .call(d3.svg.axis().scale(xScale).orient("bottom"))
-            .append("text")
-            .style("text-anchor", "end")
-            .text("Giorni");
+            .call(d3.svg.axis().scale(xScale).tickFormat(d3.time.format("%d")).orient("bottom"))
+            //.append("text")
+            //.style("text-anchor", "end")
+            //.text("Giorni");
 
         // Y
-
         yScale.domain([
             d3.min(cities, function(c) { return d3.min(c.values, function(v) { return v.temperature; }); }),
             d3.max(cities, function(c) { return d3.max(c.values, function(v) { return v.temperature; }); })
@@ -170,12 +192,11 @@
         svg.append("g")
             .attr("class", "y axis")
             .call(d3.svg.axis().scale(yScale).orient("left"))
-            .attr("y", -10)
-            .append("text")
-            .style("text-anchor", "end")
-            .text("Valori");
+            //.attr("y", -10)
+            //.append("text")
+            //.style("text-anchor", "end")
+            //.text("Valori");
 
-        
 
         var city = svg.selectAll(".city")
             .data(cities)
@@ -201,56 +222,7 @@
             .attr("x", 3)
             .attr("dy", ".35em")
             .text(function(d) { return d.name; });
-        /*
-        city.selectAll("circle")
-            .data(data).enter()
-            .append("circle")
-            .style("opacity", 0.2)
-            .attr("cx", function(d) {return xScale(d.date)})
-            .attr("cy", function(d) {return yScale(d["differenza"])})
-            .attr("r", 0);
 
-        city.selectAll("circle")
-            .on("mouseover", function(d){
-                d3.select(this)
-                .transition()
-                .style("opacity", 1)
-                .attr("r", 8);
-            })
-            .on("mouseout", function(d){
-                d3.select(this)
-                .transition()
-                .style("opacity", 0.2)
-                .attr("r", 4);
-            });
-        
-        city.selectAll("circle")
-            .on("mouseover.tooltip", function(d){
-                d3.select("text#as" + d["differenza"].toString()).remove(); // da sistemare "text#as" + d["ga:pageviews"].toString() perché se ce n'è più d'uno uguale muore
-                d3.select(".city")
-                    .append("text")
-                    .text("returns: " + d["differenza"].toString())
-                    .attr("x", xScale(d.date) + 10)
-                    .attr("y", yScale(d["differenza"]) - 10)
-                    .attr("id", "as" + d["differenza"].toString());
-            });
-        
-        city.selectAll("circle")
-            .on("mouseout.tooltip", function(d){
-            d3.select("text#as" + d["differenza"].toString())
-                .transition()
-                .duration(500)
-                .style("opacity", 0)
-                .attr("transform","translate(10, -10)")
-                .remove();
-        });
-        
-        var enter_duration = 1000;
-        city.selectAll("circle")
-            .transition()
-            .delay(function(d, i) { return i / data.length * enter_duration; })
-            .attr("r", 4);
-        */
         onCreated(dataObjectTemp);
     };
 
@@ -263,46 +235,20 @@
     }
 
     function onCreated(dOT){
-    var interpolations = ["linear","step-before","basis", "cardinal"];
-        var link = $('<ul id="selectable"><li class="ui-widget-content ui-selected">linear</li><li class="ui-widget-content">step-before</li><li class="ui-widget-content">basis-open</li><li class="ui-widget-content">cardinal-open</li></ol>').appendTo("#chart");
-        $( "#selectable" ).selectable({
-            stop: function() {
-                $( ".ui-selected", this ).each(function() {
-                    var index = $( "#selectable li" ).index( this );
-                    var modifiedWScale = d3.scale.ordinal().range([ 2, 2, 2]);
-                    var modifiedLine = d3.svg.line()
-                        .interpolate(interpolations[index])
-                        .x(function(d) { return xScale(d.date); })
-                        .y(function(d) { return yScale(d.temperature); });
-                    d3.selectAll(".line")
-                        //.transition()
-                        .attr("d", function(d) { return modifiedLine(d.values); })
-                        .style("stroke-width", function(d) { return modifiedWScale(d.name); });
-                });
-            }
-        });
+        
+        /*
         var minicolorsDiv = $('<div id="minicolorsDiv"></div>').appendTo("#chart");
 
-        for (var _metric = _dimensionsLength; _metric<_metricsLength+_dimensionsLength; _metric++) {
-            var _metricsName = dOT.columnHeaders[_metric].name.toString();
-            if(_selectedMetricsArray.indexOf(_metricsName) > -1){
-                $('<input id=' + _metricsName + ' class="minicolors"></input>').appendTo("#minicolorsDiv")
-            }
-        }
-
-        $( "#minicolorsDiv input" ).minicolors({
-            control: 'saturation',
-            defaultValue: colorArray[0],
-            textfield: false,
-            position: 'top',
-            hide: function() {
-                colorArray[0] = this[0].value;
+        minicolorsDiv.empty().colorPicker({
+            clickCallback: function(c) {
+                colorArray[0] = c;
                 var color = d3.scale.ordinal().range(colorArray);
-                d3.selectAll(".line")
-                    .style("stroke", function(d) { return color(d.name); })
+                d3.selectAll(".line").style("stroke", function(d) { return color(d.name); })
+                
             }
         });
-
+        */
+        
     }
 
     _d3.initialize = function (dataObjectTemp) {
