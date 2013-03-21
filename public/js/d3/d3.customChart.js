@@ -15,7 +15,7 @@
     var yScale = d3.scale.linear().range([height, 0]);
 
     var line = d3.svg.line()
-        .interpolate("cardinal")
+        .interpolate("linear")
         //.interpolate("basis")
         //.interpolate("step-before")
         //.interpolate("linear")
