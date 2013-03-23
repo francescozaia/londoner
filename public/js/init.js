@@ -4,6 +4,7 @@
         //initDatepicker();
         //initCheckbox();
         //initButton();
+        
     }
 
     function initDatepicker() {

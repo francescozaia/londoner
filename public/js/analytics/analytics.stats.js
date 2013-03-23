@@ -73,7 +73,7 @@
         var startDate = utils.lastDaysCount(30);
         var endDate = utils.lastDaysCount(1);
         var metrics = "ga:visits,ga:newVisits,ga:percentNewVisits,ga:timeOnSite,ga:uniquePageviews";
-        var dimensions = "ga:date";
+        var dimensions = "ga:date,ga:visitorType";
         var sortBy = "ga:date";
 
         gapi.client.analytics.data.ga.get({
@@ -95,10 +95,10 @@
                     //d3_visitsChart.initialize(response);
                     d3_customChart.initialize(response);
                 } else {
-                    utils.outputToPage('No results found.');
+                    alert('No results found.');
                 }
             } else {
-                utils.updatePage('There was an error querying core reporting API: ' + response.message);
+                alert('There was an error querying core reporting API: ' + response.message);
             }
         });
     }

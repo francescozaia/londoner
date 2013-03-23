@@ -2,6 +2,9 @@
 
     'use strict';
 
+
+    var chartElement = "#chartWidget";
+
     var margin = {top: 40, right: 40, bottom: 40, left: 40},
         width = 800 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
@@ -57,7 +60,7 @@
                 .text(dataObjectTemp.query.metrics[_m].toString())
                 .appendTo(listItem);
         };
-        ulMetricsElement.appendTo("#chart");
+        ulMetricsElement.appendTo(chartElement);
         //$( "#metrics" ).buttonset();
 
         
@@ -86,7 +89,7 @@
         });
         selectHtml += '</select>'
 
-        $(selectHtml).appendTo("#chart");
+        $(selectHtml).appendTo(chartElement);
 
         $(".target").change(function () {
             var index = this.value
@@ -104,7 +107,7 @@
 
         /* END: CREAZIONE SELECT STILE */
 
-        var svg = d3.select("#chart").append("svg")
+        var svg = d3.select(chartElement).append("svg")
             .attr("version", 1.1)
             .attr("xmlns", "http://www.w3.org/2000/svg")
             .attr("width", width + margin.left + margin.right)

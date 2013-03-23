@@ -26,10 +26,12 @@
     }
 
     function handleUnauthorized() {
-        //History.pushState({state:2}, "Authenticate", "authenticate");
-        //$goButtonElement.hide();
-        $('.home_panel').show();
-        $('.profile_panel').hide();
+        /*
+        History.pushState({state:2}, "Authenticate", "authenticate");
+        $goButtonElement.hide();
+        */
+        $('.home_panel').fadeIn();
+        $('.profile_panel').fadeOut();
         var div = $('<button/>')
                 .attr('id', 'authorize-button')
                 .text('authorize');
@@ -37,7 +39,7 @@
         $authorizeButtonElement.click(function() {
             checkAuthorization(false);
         });
-        //utils.outputToPage('Please authorize this script to access Google Analytics.');
+        alert('Please authorize this script to access Google Analytics.');
     }
 
     function checkAuthorization(immediateMode) {

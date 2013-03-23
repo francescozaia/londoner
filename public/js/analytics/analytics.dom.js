@@ -32,11 +32,14 @@
 
     _analytics.gotoWebProfiles = function(event){
         event.preventDefault();
-        // moving into "/profile"
         var profileID = $(this).attr('data-profile');
-        //History.pushState({state:3}, "Account", "account/" + profileID);
-        $('.data_panel').show();
-        $('.profile_panel').hide();
+        /*
+        moving into "/profile"
+        
+        History.pushState({state:3}, "Account", "account/" + profileID);
+        */
+        $('.data_panel').fadeIn();
+        $('.profile_panel').fadeOut();
         window.analytics_stats.queryWebproperties(profileID);
     }
 

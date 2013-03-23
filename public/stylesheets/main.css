@@ -86,7 +86,7 @@ h2 {
 }
 
 nav {
-  background-image: url( '../images/nav-bg.png' );
+  /*background-image: url( '../images/nav-bg.png' );*/
   text-align: center;
   padding: 0 0 14px 0;
   font-family: 'Lekton', sans-serif;
@@ -253,14 +253,9 @@ pre {
 @media (min-width: 761px) {
 
   nav {
-    width: 250px;
-    height: 100%;
+    width: 240px;
     float: left;
     padding: 0;
-  }
-
-  nav header {
-    padding: 40px 0 20px 0;
   }
 
   nav header img {
@@ -268,22 +263,11 @@ pre {
     height: 80px;
   }
 
-  #content {
-    padding: 30px 25px 0 25px;
-    margin: 0 0 0 250px;
-  }
-  .forkit-curtain .repo {
-    width: 33%
-  }
-
-  .forkit-curtain .repo img {
-    width: 165px;
-  }
 }
 
 
 
-/******/
+/*****
 #chart-container {
   width: 1000px; 
   margin: 0 auto 50px auto;
@@ -300,7 +284,7 @@ pre {
   text-shadow: 0 1px 1px rgba(255,255,255,0.8);
   font-size: 24px;
 }
-
+*/
 svg {
   font-size: 1em;
   font-weight: 700;

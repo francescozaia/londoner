@@ -12,17 +12,15 @@ function compile(str, path) {
 app.set('views', __dirname + '/views')
 app.set('view engine', 'jade')
 app.use(express.logger('dev'))
-app.use(stylus.middleware({
-	src: __dirname + '/public',
-	compile: compile
-}));
 
 app.use(express.static(__dirname + '/public'));
 app.get('/*', function (req, res) {
-	res.render('index', {
-		title : 'Home'
+	res.render('layout', {
+		title : 'Home',
+		gatto : 'fff'
 	});
 })
+
 
 var port = process.env.PORT || 3000;
 app.listen(port);

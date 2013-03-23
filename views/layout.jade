@@ -7,8 +7,8 @@ html
     meta(http-equiv='viewport', content='width=device-width')
     title #{title} - Londoner
     link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Homenaje')
-    link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/stylesheets/main.css')
+
   body
     nav
       header
@@ -39,34 +39,40 @@ html
           a(href='#') Test
         li(class='nav-sub nav-divider')
           a(href='#') Insight
-        //
-          li
-            a(href='#')
-              img(src='./images/icon-faqs.png')
-              | FAQs
-          li(class='nav-divider')
-            a(href='#')
-              img(src='./images/icon-discuss.png')
-              | Send a feedback
-          li
-            a(href='#')
-              img(src='./images/icon-google-plus.png')
-              | Google Plus
-          li(class='nav-divider')
-            a(href='#')
-              img(src='./images/icon-twitter.png')
-              | Twitter
         li
           a(href='https://github.com/francescozaia')
             img(src='./images/icon-github.png')
             | Github
     div#content
-      block content
+      article
+        header Londoner
+        section
+          h1
+            span Yo: 
+            | just testing
+          p
+            a(href='#') Londoner
+            |  is a #TODO
+          h2.hero-title Hi!
+          div(class='row features')
+            div.home_panel(style='display:none')
+              | Hi! I am the login panel!
+              | You need to authenticate with Google to access all the features
+              div#authenticationPanel
+            div.profile_panel(style='display:none')
+              | Hi! I am the profile panel!
+            div.data_panel(style='display:none')
+              | Hi! I am the data panel!
+              div#boxWidget.widget
+              div#chartWidget.widget
+              div#tableWidget.widget
+              div#pieWidget.widget
 
     //- scripts
     script(src='http://documentcloud.github.com/underscore/underscore-min.js')
+    script(src='https://raw.github.com/visionmedia/jade/master/runtime.min.js')
     script(src='//code.jquery.com/jquery-1.9.0.min.js')
-    script(src='./js/minicolors/jquery.colorpicker.js')
+    script(src='./js/jquery.colorpicker.js')
     script(src='./js/utils.js')
 
     //- analytics
@@ -86,8 +92,9 @@ html
     script(src='./js/init.js')
     script(src='./js/app.js')
 
-    script(type='text/template')
-      Login <h1>pippo</h1>
+    script(type='text/template', id='widget1')
+      | Login
+      h1#test pippo
 
     script
       init.go();
