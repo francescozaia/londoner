@@ -1,7 +1,7 @@
 #londoner
 ##An experiment about *D3 visualization* of *Google Analytics* data built with *node*
 
-###Disclaimer: it's a personal, work-in-progress repo. You can see the current result [HERE](http://francesco.zaia.londoner.jit.su/)
+###Disclaimer: it's a personal, work-in-progress repo.
 
 What you can find inside the repo:
 
