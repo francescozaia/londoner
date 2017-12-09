@@ -1,7 +1,10 @@
-#londoner
-##An experiment about *D3 visualization* of *Google Analytics* data built with *node*
+# londoner
 
-###Disclaimer: it's a personal, work-in-progress repo.
+[INSTALL](#install)
+
+## An experiment with *D3 visualization* of *Google Analytics* data built with *node*
+
+### Disclaimer: it's a personal, work-in-progress repo.
 
 What you can find inside the repo:
 
@@ -14,7 +17,7 @@ What you can find inside the repo:
 [D3.js](http://d3js.org/)
 
 
-###To install it:
+## INSTALL
 install node.js
 
 go to londoner dir
